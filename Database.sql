@@ -29,11 +29,15 @@ CREATE TABLE itemtype
 CREATE TABLE librarywork
 (
 	WorkID                INT AUTO_INCREMENT PRIMARY KEY,
-	ItemType              VARCHAR(20) NULL,
-	Title                 VARCHAR(50) NOT NULL,
-	isCourseLiterature    TINYINT(1)  NOT NULL DEFAULT FALSE,
-	isReferenceLiterature TINYINT(1)  NOT NULL DEFAULT FALSE,
-	Keywords              BLOB        NULL
+	ItemType              VARCHAR(20)    NULL,
+	Title                 VARCHAR(50)    NOT NULL,
+	isCourseLiterature    TINYINT(1)     NOT NULL DEFAULT FALSE,
+	isReferenceLiterature TINYINT(1)     NOT NULL DEFAULT FALSE,
+	DeweyDecimal          DECIMAL(10, 3) NULL     DEFAULT 0,
+	Keywords              BLOB           NULL,
+	CONSTRAINT librarywork_ibfk_itemtype
+		FOREIGN KEY (ItemType) REFERENCES itemtype (ItemType)
+			ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE editions
@@ -47,6 +51,12 @@ CREATE TABLE editions
 			ON UPDATE CASCADE ON DELETE CASCADE
 );
 
+CREATE TABLE usertype
+(
+	UserType VARCHAR(10) NOT NULL PRIMARY KEY,
+	maxLoans TINYINT     NOT NULL
+);
+
 CREATE TABLE user
 (
 	UserID   INT AUTO_INCREMENT PRIMARY KEY,
@@ -55,7 +65,10 @@ CREATE TABLE user
 	Lname    VARCHAR(50)  NOT NULL,
 	Email    VARCHAR(100) NULL,
 	Phone    VARCHAR(50)  NULL,
-	Address  VARCHAR(200) NULL
+	Address  VARCHAR(200) NULL,
+	CONSTRAINT user_ibfk_usertype
+		FOREIGN KEY (UserType) REFERENCES usertype (UserType)
+
 );
 
 CREATE TABLE reservation
@@ -70,12 +83,6 @@ CREATE TABLE reservation
 	CONSTRAINT reservation_ibfk_UserID
 		FOREIGN KEY (UserID) REFERENCES user (UserID)
 			ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE TABLE usertype
-(
-	UserType VARCHAR(10) NOT NULL PRIMARY KEY,
-	maxLoans TINYINT     NOT NULL
 );
 
 CREATE TABLE work_author
