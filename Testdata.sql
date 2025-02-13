@@ -1,5 +1,7 @@
 -- Testdata vi gjort själva som kan behövas under utvecklingen läggs här. Kommer inte lämnas in.
 
+-- Längst ner finns specifika test
+
 -- Testdata courtesy of ChatGPT
 -- Authors
 INSERT INTO author (FName, LName)
@@ -85,6 +87,23 @@ VALUES (1, 50, '2025-01-15', NULL),
 
 -- Loans
 INSERT INTO loan (Barcode, UserID, FineID, BorrowDate, ReturnDate, NoLoanExtensions)
-VALUES (1003, 1, NULL, '2025-01-10', '2025-02-10', 0),
-       (1005, 2, 1, '2025-01-05', '2025-02-05', 1),
-       (1008, 3, 2, '2025-01-15', '2025-02-15', 2);
+VALUES (1001, 1, NULL, '2025-01-10', '2025-02-10', 0),
+       (1002, 2, 1, '2025-01-05', '2025-02-05', 1),
+       (1003, 3, 2, '2025-01-15', '2025-04-15', 2);
+
+-- ###################################################################################################################
+-- Test av trigger för en student som lånar mer än 5 böcker
+INSERT INTO user (UserType, Fname, Lname, Email)
+VALUES ('Student', 'Maximal', 'Överlånare', 'gemigmerböcker@example.com');
+
+-- Ska gå (5 <= 5)
+INSERT INTO loan (Barcode, UserID, BorrowDate, ReturnDate, NoLoanExtensions)
+VALUES (1004, 6, '2025-02-13', '2025-03-13', 2),
+       (1005, 6, '2025-02-13', '2025-03-13', 2),
+       (1006, 6, '2025-02-13', '2025-03-13', 2),
+       (1007, 6, '2025-02-13', '2025-03-13', 2),
+       (1008, 6, '2025-02-13', '2025-03-13', 2);
+
+-- Ska inte gå (6 > 5)
+INSERT INTO loan (Barcode, UserID, BorrowDate, ReturnDate, NoLoanExtensions)
+VALUE (1009, 6, '2025-02-13', '2025-03-13', 2);
