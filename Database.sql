@@ -11,14 +11,20 @@ CREATE TABLE author
 	LName    VARCHAR(50) NOT NULL
 );
 
+/*
+
+ */
 CREATE TABLE fine
 (
 	FineID     INT  NOT NULL PRIMARY KEY,
-	FineAmount INT  NULL,
-	IssueDate  DATE NULL DEFAULT (CURRENT_DATE),
+	FineAmount INT  NOT NULL,
+	IssueDate  DATE NOT NULL DEFAULT (CURRENT_DATE),
 	PaidDate   DATE NULL
 );
 
+/*
+ Lookup-table. Definierar alla typer av låneperioder
+ */
 CREATE TABLE itemtype
 (
 	ItemType     VARCHAR(20)           NOT NULL PRIMARY KEY,
@@ -26,10 +32,13 @@ CREATE TABLE itemtype
 	Unit         ENUM ('day', 'month') NOT NULL
 );
 
+/*
+ DeweyDecimal är verkets placering i biblioteket. Alla kopior bör finnas på samma plats. Tillåter NULL i det fall att verket inte finns på en hylla.
+ */
 CREATE TABLE librarywork
 (
 	WorkID                INT AUTO_INCREMENT PRIMARY KEY,
-	ItemType              VARCHAR(20)    NULL,
+	ItemType              VARCHAR(20)    NOT NULL,
 	Title                 VARCHAR(50)    NOT NULL,
 	isCourseLiterature    TINYINT(1)     NOT NULL DEFAULT FALSE,
 	isReferenceLiterature TINYINT(1)     NOT NULL DEFAULT FALSE,
@@ -40,10 +49,13 @@ CREATE TABLE librarywork
 			ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
+/*
+ Tillåter NULL på ISBN och publisher då DVD saknar dessa.
+ */
 CREATE TABLE editions
 (
 	EditionID INT         NOT NULL PRIMARY KEY,
-	WorkID    INT         NULL,
+	WorkID    INT         NOT NULL,
 	ISBN      VARCHAR(13) NULL,
 	Publisher VARCHAR(50) NULL,
 	CONSTRAINT editions_ibfk_WorkID
@@ -73,10 +85,10 @@ CREATE TABLE user
 
 CREATE TABLE reservation
 (
-	ReservationID   INT  NOT NULL PRIMARY KEY,
-	UserID          INT  NULL,
-	WorkID          INT  NULL,
-	ReservationDate DATE NULL DEFAULT (CURRENT_DATE),
+	ReservationID   INT      NOT NULL PRIMARY KEY,
+	UserID          INT      NOT NULL,
+	WorkID          INT      NOT NULL,
+	ReservationDate DATETIME NOT NULL DEFAULT (CURRENT_DATE),
 	CONSTRAINT reservation_ibfk_WorkID
 		FOREIGN KEY (WorkID) REFERENCES librarywork (WorkID)
 			ON UPDATE CASCADE ON DELETE CASCADE,
@@ -102,7 +114,7 @@ CREATE TABLE workcopy
 (
 	Barcode    INT        NOT NULL PRIMARY KEY,
 	WorkID     INT        NULL,
-	isBorrowed TINYINT(1) NULL,
+	isBorrowed TINYINT(1) NOT NULL,
 	CONSTRAINT workcopy_ibfk_WorkID
 		FOREIGN KEY (WorkID) REFERENCES librarywork (WorkID)
 			ON UPDATE CASCADE
@@ -115,8 +127,8 @@ CREATE TABLE loan
 	UserID           INT     NULL,
 	FineID           INT     NULL,
 	BorrowDate       DATE    NOT NULL DEFAULT (CURRENT_DATE),
-	ReturnDate       DATE    NULL     DEFAULT (ADDDATE(CURRENT_DATE, INTERVAL 30 DAY)),
-	NoLoanExtensions TINYINT NOT NULL,
+	ReturnDate       DATE    NOT NULL,
+	NoLoanExtensions TINYINT NOT NULL DEFAULT 0,
 	CONSTRAINT loan_ibfk_FineID
 		FOREIGN KEY (FineID) REFERENCES fine (FineID)
 			ON UPDATE CASCADE ON DELETE SET NULL,

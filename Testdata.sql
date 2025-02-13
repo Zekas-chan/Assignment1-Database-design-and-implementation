@@ -61,11 +61,7 @@ VALUES ('Student', 'Alice', 'Smith', 'alice.smith@example.com', '1234567890', '1
 
 -- Reservations
 INSERT INTO reservation (ReservationID, UserID, WorkID, ReservationDate)
-VALUES (1, 1, 3, '2025-02-01'),
-       (2, 2, 5, '2025-02-02'),
-       (3, 3, 7, '2025-02-03'),
-       (4, 4, 9, '2025-02-04'),
-       (5, 5, 2, '2025-02-05');
+VALUES (1, 1, 1,  '2025-02-13 00:00:00');
 
 -- Work Copies
 INSERT INTO workcopy (Barcode, WorkID, isBorrowed)
@@ -91,7 +87,8 @@ VALUES (1001, 1, NULL, '2025-01-10', '2025-02-10', 0),
        (1002, 2, 1, '2025-01-05', '2025-02-05', 1),
        (1003, 3, 2, '2025-01-15', '2025-04-15', 2);
 
--- ###################################################################################################################
+-- ############################################################################
+
 -- Test av trigger för en student som lånar mer än 5 böcker
 INSERT INTO user (UserType, Fname, Lname, Email)
 VALUES ('Student', 'Maximal', 'Överlånare', 'gemigmerböcker@example.com');
