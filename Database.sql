@@ -127,7 +127,7 @@ CREATE TABLE loan
 	UserID           INT     NULL,
 	FineID           INT     NULL,
 	BorrowDate       DATE    NOT NULL DEFAULT (CURRENT_DATE),
-	ReturnDate       DATE    NOT NULL,
+	ReturnDate       DATE    NOT NULL, -- default via unimplemented function
 	NoLoanExtensions TINYINT NOT NULL DEFAULT 0,
 	CONSTRAINT loan_ibfk_FineID
 		FOREIGN KEY (FineID) REFERENCES fine (FineID)
@@ -139,6 +139,20 @@ CREATE TABLE loan
 		FOREIGN KEY (Barcode) REFERENCES workcopy (Barcode)
 			ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+-- Indices
+CREATE INDEX author_LName_FName_index
+	ON author (LName, FName);
+
+CREATE INDEX librarywork_Title_index
+	ON librarywork (Title);
+
+CREATE UNIQUE INDEX editions_ISBN_uindex
+	ON editions (ISBN);
+
+CREATE UNIQUE INDEX user_Email_uindex
+	ON user (Email);
+
 
 -- User types
 INSERT INTO usertype(usertype, maxloans)
