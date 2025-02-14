@@ -113,7 +113,7 @@ CREATE TABLE work_author
 CREATE TABLE workcopy
 (
 	Barcode    INT        NOT NULL PRIMARY KEY,
-	WorkID     INT        NULL,
+	WorkID     INT        NOT NULL,
 	isBorrowed TINYINT(1) NOT NULL,
 	CONSTRAINT workcopy_ibfk_WorkID
 		FOREIGN KEY (WorkID) REFERENCES librarywork (WorkID)
@@ -124,7 +124,7 @@ CREATE TABLE loan
 (
 	LoanID           INT AUTO_INCREMENT PRIMARY KEY,
 	Barcode          INT     NOT NULL,
-	UserID           INT     NULL,
+	UserID           INT     NULL, -- allows null for user deletion to maintain statistics
 	FineID           INT     NULL,
 	BorrowDate       DATE    NOT NULL DEFAULT (CURRENT_DATE),
 	ReturnDate       DATE    NOT NULL, -- default via unimplemented function
